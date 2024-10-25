@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarklet Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 20px;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        p {
+            font-size: 1.1em;
+        }
+
+        .bookmarklets {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .bookmarklets {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .bookmarklets {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bookmarklet {
+            background-color: #e7f4e9;
+            border: 1px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        a {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Bookmarklet Tools</h1>
+
+    <p style="font-size: 24px;">To use any of the bookmarklets below, simply <span style="font-weight: bold;"> drag the
+            <span style="color:#4CAF50">link</span> to your bookmarks bar.</span></p>
+    <p>Then, when you are on a webpage, click the bookmarklet in your bookmarks bar to activate it.</p>
+
+    <div class="bookmarklets">
+
+        <div class="bookmarklet">
+            <h2>Bullet Checker</h2>
+            <p>Finds and highlights all <b>single bullet points</b> (lists with only one bullet). It will
+                scroll to the first one it finds and inform you how many were detected.</p>
+            <a
+                href="javascript:(function(){var foundSingleBullet=false;var lists=document.querySelectorAll('ul');var firstSingleBullet=null;var count=0;lists.forEach(function(ul){var listItems=ul.getElementsByTagName('li');if(listItems.length===1){foundSingleBullet=true;listItems[0].style.backgroundColor='yellow';count++;if(!firstSingleBullet){firstSingleBullet=listItems[0];}}});if(foundSingleBullet){firstSingleBullet.scrollIntoView({behavior:'smooth',block:'center'});alert('Found and highlighted ' + count + ' single bullet point(s). Scrolled to the first one.');}else{alert('No single bullet points found.');}})();">Bullet
+                Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Link Checker</h2>
+            <p>Highlights <b>links with a space at the end</b> of their text (ignoring navigation links or
+                image links). It will scroll to the first one found.</p>
+            <a
+                href="javascript:(function(){var links=document.querySelectorAll('a');var found=false;links.forEach(function(link){if(!link.closest('nav') && !link.querySelector('img')){var linkText=link.innerText||link.textContent;if(linkText.endsWith(' ')){link.style.backgroundColor='yellow';if(!found){link.scrollIntoView({behavior:'smooth',block:'center'});found=true;}}}});if(!found){alert('No links found with a space at the end of the link text.');}else{alert('Links with a space at the end of the link text have been highlighted.');}})();">Link
+                Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Sentence Checker</h2>
+            <p>Finds <b>sentences that are longer than 30 words</b>, highlights them, scrolls down to the
+                first instance and opens a new tab listing all the long sentences it found.</p>
+            <a
+                href="javascript:(function(){var spans=document.querySelectorAll(&quot;span[style]&quot;);spans.forEach(function(span){span.outerHTML=span.innerHTML;});var paragraphs=document.querySelectorAll(&quot;p&quot;);var longSentences=[];var firstHighlight=null;paragraphs.forEach(function(p){var sentences=p.innerText.match(/[^.!?]*[.!?]/g);if(sentences){for(var i=0;i&lt;sentences.length;i++){var wordCount=sentences[i].trim().split(/\s+/).length;if(wordCount&gt;30){longSentences.push(sentences[i]);var sentenceHTML=p.innerHTML;var regex=new RegExp(sentences[i].replace(/[.*+?^${}()|[\\]\\\\]/g,&quot;\\\\$&quot;),&quot;g&quot;);p.innerHTML=sentenceHTML.replace(regex,&quot;&lt;span style=&#39;background-color:yellow;&#39;&gt;&quot;+sentences[i]+&quot;&lt;/span&gt;&quot;);if(!firstHighlight){firstHighlight=document.querySelector(&quot;span[style*=&#39;background-color:yellow&#39;]&quot;);}}}}});if(longSentences.length&gt;0){alert(&#39;Found &#39;+longSentences.length+&#39; sentences longer than 30 words.&#39;);if(firstHighlight){firstHighlight.scrollIntoView({behavior:&#39;smooth&#39;,block:&#39;center&#39;});}var newWindow=window.open(&#39;&#39;,&#39;_blank&#39;);newWindow.document.write(&quot;&lt;html&gt;&lt;body&gt;&lt;div style=&#39;font-weight:bold; font-size:20px;&#39;&gt;Long Sentences Found:&lt;/div&gt;&lt;ul&gt;&quot;);for(var i=0;i&lt;longSentences.length;i++){newWindow.document.write(&quot;&lt;li&gt;&quot;+longSentences[i]+&quot;&lt;/li&gt;&quot;);}newWindow.document.write(&quot;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;&quot;);newWindow.document.close();}else{alert(&#39;No sentences longer than 30 words found.&#39;);}})();">Sentence
+                Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Paragraph Checker</h2>
+            <p>Finds <b>paragraphs longer than 150 words</b>, highlights them, and scrolls to the first one it
+                finds.</p>
+            <a
+                href="javascript:(function(){var previousHighlights=document.querySelectorAll(&quot;span[style*=&#39;background-color:yellow&#39;]&quot;);previousHighlights.forEach(function(span){span.outerHTML=span.innerHTML;});var paragraphs=document.getElementsByTagName(&quot;p&quot;);var foundLongParagraph=false;for(var i=0;i&lt;paragraphs.length;i++){var paragraphText=paragraphs[i].innerText||paragraphs[i].textContent;var wordCount=paragraphText.trim().split(/\s+/).length;if(wordCount&gt;150){foundLongParagraph=true;paragraphs[i].style.backgroundColor=&#39;yellow&#39;;paragraphs[i].scrollIntoView({behavior:&#39;smooth&#39;,block:&#39;center&#39;});alert(&#39;A paragraph longer than 150 words has been highlighted. It contains &#39;+wordCount+&#39; words.&#39;);break;}}if(!foundLongParagraph){alert(&#39;No paragraphs longer than 150 words found.&#39;);}})();">Paragraph
+                Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Header Checker</h2>
+            <p>Finds all <b>headings</b> (`h1` to `h6`) on the page and opens a new tab listing them in order
+                as they appear on the page.</p>
+            <a
+                href="javascript:(function(){let e=document.querySelectorAll('h1,h2,h3,h4,h5,h6'),t='';e.forEach(function(e){t+=e.tagName+': '+e.textContent.trim()+'<br>';});let n=window.open('','_blank');n.document.write('<html><body>'+(t||'No headings found on this page.')+'</body></html>');n.document.close();})();">Header
+                Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Header Sequence Checker</h2>
+            <p>Checks all <b>headings</b> (h1 to h6) on the page, highlights any <b>out of sequence</b> in red, and
+                scrolls to the first mistake while reporting the total errors found.</p>
+            <a
+                href="javascript:(function(){let headers=document.querySelectorAll(&quot;h1,h2,h3,h4,h5,h6&quot;),correctSequence=[&quot;H1&quot;,&quot;H2&quot;,&quot;H3&quot;,&quot;H4&quot;,&quot;H5&quot;,&quot;H6&quot;],prevIndex=0,isOutOfOrder=false,errorCount=0,firstErrorHeader=null;headers.forEach(header=&gt;{let currentIndex=correctSequence.indexOf(header.tagName);if(currentIndex&gt;prevIndex+1){isOutOfOrder=true;errorCount++;header.style.color=&quot;red&quot;;header.style.backgroundColor=&quot;yellow&quot;;header.innerHTML+=` &lt;span style=&quot;color:red;font-weight:bold;&quot;&gt;(Error: ${correctSequence[prevIndex]} followed by ${header.tagName})&lt;/span&gt;`;if(!firstErrorHeader){firstErrorHeader=header}}prevIndex=(currentIndex&lt;=prevIndex||currentIndex===prevIndex+1)?currentIndex:prevIndex});if(isOutOfOrder){if(firstErrorHeader){firstErrorHeader.scrollIntoView({behavior:&quot;smooth&quot;});alert(`Found ${errorCount} heading sequence mistakes.`)}}else{alert(&quot;All headers are in the correct sequence.&quot;)}})();">Header
+                Sequence Checker</a>
+        </div>
+
+        <div class="bookmarklet">
+            <h2>Capitalization Checker</h2>
+            <p>Checks all <b>headings</b> (h1 to h6) on the page, highlights <b>incorrect capitalization</b> in
+                yellow,
+                and scrolls to the first mistake while showing the corrected version.</p>
+            <p>NOTE: Do double check the corrected version as it might be inaccurate (ex. vs > Vs) </p>
+            <a
+                href="javascript:(function(){const lowercaseWords=[&quot;a&quot;,&quot;an&quot;,&quot;and&quot;,&quot;as&quot;,&quot;at&quot;,&quot;but&quot;,&quot;by&quot;,&quot;for&quot;,&quot;if&quot;,&quot;in&quot;,&quot;nor&quot;,&quot;of&quot;,&quot;on&quot;,&quot;or&quot;,&quot;so&quot;,&quot;the&quot;,&quot;to&quot;,&quot;up&quot;,&quot;yet&quot;];function isIgnoredWord(word){return /[A-Z].*[A-Z]/.test(word);}function toTitleCase(text){return text.split(&#39; &#39;).map((word,index,words)=&gt;{if(isIgnoredWord(word)){return word;}if(index===0||index===words.length-1||word.length&gt;=4||!lowercaseWords.includes(word.toLowerCase())){return word.charAt(0).toUpperCase()+word.slice(1).toLowerCase();}return word.toLowerCase();}).join(&#39; &#39;);}const headers=document.querySelectorAll(&quot;h1,h2,h3,h4,h5,h6&quot;);let firstIncorrectHeader=null;let incorrectCount=0;headers.forEach(header=&gt;{const originalText=header.innerText.trim();const titleCasedText=toTitleCase(originalText);if(originalText!==titleCasedText){header.style.backgroundColor=&quot;yellow&quot;;header.innerHTML=originalText+` &lt;span style=&quot;color:red;font-weight:bold;&quot;&gt;(Correction: ${titleCasedText})&lt;/span&gt;`;if(!firstIncorrectHeader){firstIncorrectHeader=header;}incorrectCount++;}});if(incorrectCount&gt;0){if(firstIncorrectHeader){firstIncorrectHeader.scrollIntoView({behavior:&quot;smooth&quot;,block:&quot;center&quot;});}alert(`Found ${incorrectCount} header(s) with incorrect capitalization.`);}else{alert(&quot;All headers are correctly capitalized.&quot;);}})();">Capitalization
+                Checker</a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
